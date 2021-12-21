@@ -21,13 +21,6 @@ enum encoder_names {
   _MIDDLE,
 };
 
-// Ideas:
-// https://www.reddit.com/r/olkb/comments/bauj0t/can_you_change_encoders_output_using_layers_qmk/
-// talks about making encoders do different things on different layers
-//
-// https://docs.splitkb.com/hc/en-us/articles/360010513760-How-can-I-use-a-rotary-encoder- talks
-// about setting up command-tabbing for application switching
-//
 // layer 0: window management
 //   encoder 0: shrink/grow master pane
 //     press: cycle layout
@@ -55,7 +48,7 @@ enum encoder_names {
 //     press: paste
 //   shift/backspace/delete
 //   go to layer 0 / go to layer 1 / nothing
-// layer ADJUST: reset / rgb control
+// layer ADJUST (3): reset / rgb control
 //   encoder 0: increase/decrease hue
 //    press: toggle lighting on/off
 //   encoder 1: increase/decrease saturation
@@ -88,26 +81,91 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == _LEFT) { // scroll word left/right
-        if (clockwise) {
-            tap_code16(LALT(KC_RGHT));
-        } else {
-            tap_code16(LALT(KC_LEFT));
-        }
-    }
-    else if (index == _MIDDLE) { // mouse wheel up / down
-        if (clockwise) {
-            tap_code(KC_WH_D);
-        } else {
-            tap_code(KC_WH_U);
-        }
-    }
-    else if (index == _RIGHT) { // window management: shrink / expand master pane
-        if (clockwise) {
-            tap_code16(LSA(KC_P));
-        } else {
-            tap_code16(LSA(KC_J));
-        }
+    switch(biton32(layer_state)) {
+        case 3: // adjust layer
+            if (index == _LEFT) { // encoder 0: increase/decrease hue
+                if (clockwise) {
+                    tap_code(RGB_HUI);
+                } else {
+                    tap_code(RGB_HUD);
+                }
+            } else if (index == _MIDDLE) { // encoder 1: increase/decrease saturation
+                if (clockwise) {
+                    tap_code(RGB_SAI);
+                } else {
+                    tap_code(RGB_SAD);
+                }
+            } else if (index == _RIGHT) { // encoder 2: increase/decrease brightness
+                if (clockwise) {
+                    tap_code(RGB_VAI);
+                } else {
+                    tap_code(RGB_VAD);
+                }
+            }
+            break;
+        case 2: // text editing layer
+            if (index == _LEFT) { // encoder 0: scroll word at a time
+                if (clockwise) {
+                    tap_code16(LALT(KC_RGHT));
+                } else {
+                    tap_code16(LALT(KC_LEFT));
+                }
+            } else if (index == _MIDDLE) { // encoder 1: left/right
+                if (clockwise) {
+                    tap_code(KC_RGHT);
+                } else {
+                    tap_code(KC_LEFT);
+                }
+            } else if (index == _RIGHT) { // encoder 2: up/down
+                if (clockwise) {
+                    tap_code(KC_UP);
+                } else {
+                    tap_code(KC_DOWN);
+                }
+            }
+            break;
+        case 1: // navigation layer
+            if (index == _LEFT) { // encoder 0: mouse wheel up/down
+                if (clockwise) {
+                    tap_code(KC_WH_D);
+                } else {
+                    tap_code(KC_WH_U);
+                }
+            } else if (index == _MIDDLE) { // encoder 1: mouse wheel left/right
+                if (clockwise) {
+                    tap_code(KC_WH_R);
+                } else {
+                    tap_code(KC_WH_L);
+                }
+            } else if (index == _RIGHT) { // encoder 2: browser tab left/right
+                if (clockwise) {
+                    tap_code16(LCTL(KC_TAB));
+                } else {
+                    tap_code16(LCTL(LSFT(KC_TAB)));
+                }
+            }
+            break;
+        default: // window management layer
+            if (index == _LEFT) { // encoder 0: shrink/grow master pane
+                if (clockwise) {
+                    tap_code16(LSA(KC_P));
+                } else {
+                    tap_code16(LSA(KC_J));
+                }
+            } else if (index == _MIDDLE) { // encoder 1: select active window
+                if (clockwise) {
+                    tap_code16(LSA(KC_V));
+                } else {
+                    tap_code16(LSA(KC_C));
+                }
+            } else if (index == _RIGHT) { // encoder 2: move active window counter-clockwise / clockwise
+                if (clockwise) {
+                    tap_code16(MEH(V));
+                } else {
+                    tap_code16(MEH(C));
+                }
+            }
+            break;
     }
     return true;
 }
