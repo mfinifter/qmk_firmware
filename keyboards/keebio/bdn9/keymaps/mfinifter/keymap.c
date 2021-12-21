@@ -85,21 +85,21 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         case 3: // adjust layer
             if (index == _LEFT) { // encoder 0: increase/decrease hue
                 if (clockwise) {
-                    tap_code(RGB_HUI);
+                    rgblight_increase_hue();
                 } else {
-                    tap_code(RGB_HUD);
+                    rgblight_decrease_hue();
                 }
             } else if (index == _MIDDLE) { // encoder 1: increase/decrease saturation
                 if (clockwise) {
-                    tap_code(RGB_SAI);
+                    rgblight_increase_sat();
                 } else {
-                    tap_code(RGB_SAD);
+                    rgblight_decrease_sat();
                 }
             } else if (index == _RIGHT) { // encoder 2: increase/decrease brightness
                 if (clockwise) {
-                    tap_code(RGB_VAI);
+                    rgblight_increase_val();
                 } else {
-                    tap_code(RGB_VAD);
+                    rgblight_decrease_val();
                 }
             }
             break;
@@ -160,9 +160,9 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 }
             } else if (index == _RIGHT) { // encoder 2: move active window counter-clockwise / clockwise
                 if (clockwise) {
-                    tap_code16(MEH(V));
+                    tap_code16(MEH(KC_V));
                 } else {
-                    tap_code16(MEH(C));
+                    tap_code16(MEH(KC_C));
                 }
             }
             break;
