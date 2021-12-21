@@ -28,6 +28,25 @@ enum encoder_names {
 // /
 // https://www.reddit.com/r/olkb/comments/bauj0t/can_you_change_encoders_output_using_layers_qmk/
 // talks about making encoders do different things on different layers
+//
+// https://docs.splitkb.com/hc/en-us/articles/360010513760-How-can-I-use-a-rotary-encoder- talks
+// about setting up command-tabbing for application switching
+//
+// all layers have a key to switch to layer 0, layer 1, layer 2
+//
+// layer 0: navigation, web browsing, and VC
+//   encoder 0:
+//   encoder 1:
+//   encoder 2:
+// layer 1: application management
+//   encoder 0: virtual desktop switching
+//   encoder 1: app switching 
+//   encoder 2: tab switching
+// layer 2: window management
+//   encoder 0: shrink/grow master pane
+//     press: cycle layout
+//   encoder 1: select active window
+//   encoder 2: move active window counter-clockwise / clockwise
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
         | Knob 1: Vol Dn/Up |      | Knob 2: Page Dn/Up |
