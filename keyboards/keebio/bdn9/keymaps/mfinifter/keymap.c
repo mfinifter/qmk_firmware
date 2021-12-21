@@ -21,6 +21,13 @@ enum encoder_names {
   _MIDDLE,
 };
 
+// Ideas:
+// * window management / desktop switching / application switching
+// * zoom mute / face mute
+// * web browser: scrolling, changing tabs, nav back/forward
+// /
+// https://www.reddit.com/r/olkb/comments/bauj0t/can_you_change_encoders_output_using_layers_qmk/
+// talks about making encoders do different things on different layers
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*
         | Knob 1: Vol Dn/Up |      | Knob 2: Page Dn/Up |
@@ -46,25 +53,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == _LEFT) {
+    if (index == _LEFT) { // scroll word left/right
         if (clockwise) {
-            tap_code(KC_VOLU);
+            tap_code16(LALT(KC_RGHT));
         } else {
-            tap_code(KC_VOLD);
+            tap_code16(LALT(KC_LEFT));
         }
     }
-    else if (index == _MIDDLE) {
+    else if (index == _MIDDLE) { // mouse wheel up / down
         if (clockwise) {
-            tap_code(KC_DOWN);
+            tap_code(KC_WH_D);
         } else {
-            tap_code(KC_UP);
+            tap_code(KC_WH_U);
         }
     }
-    else if (index == _RIGHT) {
+    else if (index == _RIGHT) { // window management: shrink / expand master pane
         if (clockwise) {
-            tap_code(KC_PGDN);
+            tap_code16(LSA(KC_P));
         } else {
-            tap_code(KC_PGUP);
+            tap_code16(LSA(KC_J));
         }
     }
     return true;
