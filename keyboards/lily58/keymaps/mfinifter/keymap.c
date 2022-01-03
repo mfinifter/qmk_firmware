@@ -67,7 +67,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   |      |      |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
-[_LOWER] = LAYOUT(
+[_RAISE] = LAYOUT(
   KC_TRNS, KC_TRNS, KC_TRNS,       KC_TRNS, KC_TRNS,       KC_TRNS,                   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
   KC_TRNS, KC_TRNS, KC_TRNS,       KC_PGUP, KC_TRNS,       KC_TRNS,                   KC_TRNS, KC_TRNS, KC_UP,   KC_TRNS, KC_TRNS, KC_BSLS,
   KC_TRNS, KC_TRNS, LALT(KC_LEFT), KC_PGDN, LALT(KC_RGHT), KC_TRNS,                   KC_TRNS, KC_LEFT, KC_DOWN, KC_RGHT, KC_TRNS, KC_TRNS,
