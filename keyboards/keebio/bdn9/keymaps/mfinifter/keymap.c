@@ -50,12 +50,9 @@ enum encoder_names {
 //   go to layer 0 / go to layer 1 / nothing
 // layer ADJUST (3): reset / rgb control
 //   encoder 0: increase/decrease hue
-//    press: toggle lighting on/off
-//   encoder 1: increase/decrease saturation
-//    press: cycle through modes forward
+//   encoder 1: next/previous animation
 //   encoder 2: increase/decrease brightness
-//    press: cycle through modes backward
-//   bl toggle / bl step / bl breathing
+//   rgb toggle / decrease saturation / increase saturation
 //   nothing / nothing / reset
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
@@ -74,8 +71,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TO(0), TO(1), KC_TRNS
     ),
     [3] = LAYOUT(
-        RGB_TOG, RGB_MODE_FORWARD, RGB_MODE_REVERSE,
-        BL_TOGG, BL_STEP, BL_BRTG,
+        KC_TRNS, KC_TRNS, KC_TRNS,
+        RGB_TOG, RGB_SAD, RGB_SAI,
         KC_TRNS, KC_TRNS, RESET
     ),
 };
@@ -89,11 +86,11 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 } else {
                     rgblight_decrease_hue();
                 }
-            } else if (index == _MIDDLE) { // encoder 1: increase/decrease saturation
+            } else if (index == _MIDDLE) { // encoder 1: next/previous animation
                 if (clockwise) {
-                    rgblight_increase_sat();
+                    rgblight_step();
                 } else {
-                    rgblight_decrease_sat();
+                    rgblight_step_reverse();
                 }
             } else if (index == _RIGHT) { // encoder 2: increase/decrease brightness
                 if (clockwise) {
@@ -118,9 +115,9 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 }
             } else if (index == _RIGHT) { // encoder 2: up/down
                 if (clockwise) {
-                    tap_code(KC_UP);
-                } else {
                     tap_code(KC_DOWN);
+                } else {
+                    tap_code(KC_UP);
                 }
             }
             break;
