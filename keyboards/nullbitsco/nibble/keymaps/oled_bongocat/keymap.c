@@ -89,7 +89,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 #ifdef OLED_ENABLE
 #define IDLE_FRAME_DURATION 200 // Idle animation iteration rate in ms
 
-oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_270; }
+oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_90; }
 
 uint32_t anim_timer         = 0;
 uint32_t anim_sleep         = 0;
