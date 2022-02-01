@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include QMK_KEYBOARD_H
 #include <stdio.h>
 
+char wpm_str[10];
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
@@ -49,22 +51,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,  KC_EQL,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_PGUP, KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, KC_HOME,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_PGUP, XXXXXXX,   KC_UP, XXXXXXX, XXXXXXX, KC_HOME,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_END,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_PGDN, KC_LEFT, KC_DOWN,KC_RIGHT, XXXXXXX, KC_END,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_DEL, KC_LGUI,  MO(3),     _______,   KC_RCTL, KC_RALT
                                       //`--------------------------'  `--------------------------'
   ),
 
   [3] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-        KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                      XXXXXXX, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-        KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,  KC_F12,                      RGB_TOG,RGB_RMOD, RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,   RESET,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+  //,-----------------------------------------------------------.                    ,-----------------------------------------------------.
+      XXXXXXX, XXXXXXX,   XXXXXXX, MEH(KC_V),   XXXXXXX, XXXXXXX,                      XXXXXXX, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, RGB_SPI,
+  //|--------+--------+----------+----------+----------+--------|                    |--------+--------+--------+--------+--------+--------|
+      XXXXXXX, XXXXXXX, LSA(KC_J), MEH(KC_C), LSA(KC_P), XXXXXXX,                      RGB_TOG,RGB_RMOD, RGB_VAD, RGB_HUD, RGB_SAD, RGB_SPD,
+  //|--------+--------+----------+----------+----------+--------|                    |--------+--------+--------+--------+--------+--------|
+      XXXXXXX, XXXXXXX,   XXXXXXX,   XXXXXXX,   XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  //|--------+--------+----------+----------+----------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           XXXXXXX, KC_LGUI, _______,   _______, KC_RCTL, KC_RALT
                                       //`--------------------------'  `--------------------------'
   )
@@ -79,8 +81,8 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 
 #define L_BASE 0
-#define L_RAISE 2
-#define L_LOWER 4
+#define L_LOWER 2
+#define L_RAISE 4
 #define L_ADJUST 8
 
 void oled_render_layer_state(void) {
@@ -117,6 +119,10 @@ void oled_render_logo(void) {
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         oled_render_layer_state();
+        oled_write_ln_P(PSTR(""), false);
+        sprintf(wpm_str, "%03d", get_current_wpm());
+        oled_write(wpm_str, false);
+        oled_write_P(PSTR(" wpm"), false);
     } else {
         oled_render_logo();
     }
